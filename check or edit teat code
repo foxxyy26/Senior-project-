@@ -1,5 +1,5 @@
 mid.length=(The total playing length in seconds，float)
-mid.type=( this midi file type)
+mid.type=( this midi file type) There are three types of MIDI files:Type 0 (monorail) : All messages are stored in a single track. Type 1 (Synchronous) : All tracks start at the same time. Type 2 (asynchronous) : Each track is independent of the others
 Message(type,note=60,velocity=96,time=480) # message info
 track.append(mido.Message(type,note=60,velocity=96,time=480))# example
 track.append(mido.Message('program_change', program=1, time=0)) #Where, the program parameter determines the timbre of the track. Note: The default timbre is Piano 1, except for the percussion channel.
