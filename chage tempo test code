@@ -24,3 +24,21 @@ def change_tempo(filename, data_path, target_path):
             new_track.append(new_msg)
         new_mid.tracks.append(new_track)
     new_mid.save(target_path + filename) 
+    
+    
+    Second.
+    def change_tempo2(filename, data_path, target_path):
+    mid = mido.MidiFile(data_path + filename)
+    new_mid = mido.MidiFile()
+    new_mid.ticks_per_beat = mid.ticks_per_beat
+    for track in mid.tracks:
+        new_track = mido.MidiTrack()
+        new_mid.tracks.append(new_track)
+        for msg in track:
+            if msg.type == 'set_tempo':
+                print(msg)
+                msg.tempo = 500000
+                print(msg)
+                
+            new_track.append(msg)
+    new_mid.save(target_path + filename) 
