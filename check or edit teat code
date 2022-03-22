@@ -1,0 +1,9 @@
+mid.length=(The total playing length in seconds，float)
+mid.type=( this midi file type)
+Message(type,note=60,velocity=96,time=480) # message info
+track.append(mido.Message(type,note=60,velocity=96,time=480))# example
+track.append(mido.Message('program_change', program=1, time=0)) #Where, the program parameter determines the timbre of the track. Note: The default timbre is Piano 1, except for the percussion channel.
+track.append(mido.MetaMessage('set_tempo', tempo=500000, time=0)) # track speed, The tempo parameter determines the tempo of the piece.
+The tempo value means the number of microseconds per beat. 500000 means that each beat is 0.5 seconds (1US =1e6s), or 120 beats per minute. The conversion formula for BPM and TEMPO is BPM =(6×10^7)/tempo.
+track.append(mido.MetaMessage('track_name', name='Piano', time=0)) #The name parameter determines the name of the track.
+mid.save(‘path’) # save file
