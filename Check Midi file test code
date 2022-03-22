@@ -1,0 +1,6 @@
+import mido
+mid = mido.MidiFile(“test.mid”)
+for i, track in enumerate(mid.tracks):#enumerate()：Creates a sequence of indexes that start with 0
+    print('Track {}: {}'.format(i, track.name))
+    for msg in track:#Message traversal for each track
+        print(msg)
