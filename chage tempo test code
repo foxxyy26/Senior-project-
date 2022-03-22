@@ -1,0 +1,26 @@
+def change_tempo(filename, data_path, target_path):
+    mid = mido.MidiFile(data_path + filename)
+    new_mid = mido.MidiFile()
+    new_mid.ticks_per_beat = mid.ticks_per_beat
+    for track in mid.tracks:
+        new_track = mido.MidiTrack()
+        for msg in track:
+            new_msg = msg.copy()
+            if new_msg.type == 'set_tempo':
+                new_msg.tempo = 500000
+#            if msg.type == 'note_on' or msg.type == 'note_off':
+            if discretize_time:
+                print(msg.time)
+                new_msg.time = myround(msg.time, base=mid.ticks_per_beat/(discritezition/4) )
+#                msg.time = myround(msg.time, base=mid.ticks_per_beat/(discritezition/4) )
+            if offset_time:
+#                print('first:', time)
+                
+                print((mid.ticks_per_beat/(offset/4)))
+                new_msg.time = int(msg.time + mid.ticks_per_beat/(offset))
+#                print('second:', new_time)
+#                print('diff:',time )
+#            msg.time = time
+            new_track.append(new_msg)
+        new_mid.tracks.append(new_track)
+    new_mid.save(target_path + filename) 
