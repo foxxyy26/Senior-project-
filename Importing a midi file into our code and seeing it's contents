@@ -1,0 +1,8 @@
+import mido
+mid = mido.MidiFile('nocturne_27_2_(c)inoue.mid', clip=True)
+mid.tracks
+#This is the code for importing the midi file into our code and seeing how many tracks there are in a midi file 
+
+
+
+
