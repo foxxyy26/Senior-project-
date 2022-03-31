@@ -27,3 +27,14 @@ def arry2mid(ary, tempo=500000):
                 first_ = False
             last_time = 0
     return mid_new
+prepare_for_midi = vls[:, :, 0] #pick predict piano-roll
+prepare_for_midi = np.transpose(prepare_for_midi, [1, 0]) #turn to shape[128, N]
+print("prepare_for_midi shape: ", prepare_for_midi.shape)
+print("prepare_for_midi head:", prepare_for_midi[:3])
+#prepare_for_midi = [np.round(element) for element in prepare_for_midi] # float turn to int
+prepare_for_midi = 128 * prepare_for_midi
+prepare_for_midi = prepare_for_midi.astype(int)
+print("prepare_for_midi shape: ", prepare_for_midi.shape)
+print("prepare_for_midi head:", prepare_for_midi[:3])
+mid_new = arry2mid(prepare_for_midi)
+mid_new.save('mid_new.mid')
