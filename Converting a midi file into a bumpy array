@@ -16,3 +16,4 @@ def msg2dict(msg):
     return [result, on_]
     
     # The function msg2dict extracts important information (note, velocity, time, on or off) from each message
+   
