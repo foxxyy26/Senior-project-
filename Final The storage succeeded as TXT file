@@ -18,6 +18,15 @@ for i, track in enumerate(mid.tracks):  # enumerate()：创建索引序列，索
         fw.write(msg_decode)
 fw.close()
 
+with open('data.txt', 'r') as file:
+    text = file.read()
+            
+with open('data.txt', 'w') as file:
+    # Delete
+    new_text = text.replace('type:', '')
+    # Write
+    file.write(new_text)
+
 mid.tracks.append(track)
 # track.append(Message('program_change',channel=0,program= X,time=0))
 # track.append(Message('note_on', note=XX, velocity=64, time=XX,channel=0))
