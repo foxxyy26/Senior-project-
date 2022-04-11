@@ -35,3 +35,16 @@ mid.tracks.append(track)
 mid.save('new.mid')
 
 Data = np.loadtxt("data.txt", dtype=int)
+
+tracks = []
+with open('data.txt', 'r') as file:
+    lines = file.readlines()
+    print(lines)
+    
+    for line in text:
+        notes = [note for note in text if line == 'Note On']
+        pitch = [note.pitch for note in notes]
+        tick = [note.tick for note in notes]
+        tracks += [tick, pitch]
+        
+print(tracks)
