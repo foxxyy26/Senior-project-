@@ -24,3 +24,5 @@ mid.tracks.append(track)
 # track.append(Message('note_off', note=XX, velocity=64, time=XX,channel=0))
 #fw.close()
 mid.save('new.mid')
+
+Data = np.loadtxt("data.txt", dtype=int)
