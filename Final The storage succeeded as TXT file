@@ -18,15 +18,6 @@ for i, track in enumerate(mid.tracks):  # enumerate()：创建索引序列，索
         fw.write(msg_decode)
 fw.close()
 
-with open('data.txt', 'r') as file:
-    text = file.read()
-            
-with open('data.txt', 'w') as file:
-    # Delete
-    new_text = text.replace('type:', '')
-    # Write
-    file.write(new_text)
-
 mid.tracks.append(track)
 # track.append(Message('program_change',channel=0,program= X,time=0))
 # track.append(Message('note_on', note=XX, velocity=64, time=XX,channel=0))
@@ -34,17 +25,16 @@ mid.tracks.append(track)
 #fw.close()
 mid.save('new.mid')
 
-Data = np.loadtxt("data.txt", dtype=int)
-
 tracks = []
 with open('data.txt', 'r') as file:
     lines = file.readlines()
-    print(lines)
     
-    for line in text:
-        notes = [note for note in text if line == 'Note On']
-        pitch = [note.pitch for note in notes]
-        tick = [note.tick for note in notes]
-        tracks += [tick, pitch]
+    for line in lines:
+        for word in line.split():
+            notes = [note for note in lines if word == 'Note On']
+            channel = [note for note in lines if word == 'channel' ]
+            velocity = [note for note in lines if word == 'velocity']
+            time = [note.time for note in lines if word == 'time']
+            tracks += [notes, channel, velocity, time]
         
 print(tracks)
