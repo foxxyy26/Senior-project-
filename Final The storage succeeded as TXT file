@@ -25,6 +25,13 @@ mid.tracks.append(track)
 #fw.close()
 mid.save('new.mid')
 
+
+def readFile(new.mid):
+    fileObj = open(new.mid, "r") # opens the file in read mode
+    words = fileObj.read().splitlines() # puts the file into an array 
+    fileObj.close()
+    return words
+    
 tracks = []
 with open('data.txt', 'r') as file:
     lines = file.readlines()
