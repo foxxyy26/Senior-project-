@@ -5,11 +5,9 @@ from mido import MidiFile, MidiTrack
 track = MidiTrack()  #
 mid = MidiFile('VampireKillerCV3.mid')
 fw = open("Data.txt", 'w')
-for i, track in enumerate(mid.tracks):  # enumerate()：创建索引序列，索引初始为0
-
+for i, track in enumerate(mid.tracks):  
     print('Track {}: {}'.format(i, track.name))
-    for msg in track:  #
-
+    for msg in track:
         print(msg)
         msg_decode = ""
         for attr in msg.__dict__:
@@ -19,10 +17,7 @@ for i, track in enumerate(mid.tracks):  # enumerate()：创建索引序列，索
 fw.close()
 
 mid.tracks.append(track)
-# track.append(Message('program_change',channel=0,program= X,time=0))
-# track.append(Message('note_on', note=XX, velocity=64, time=XX,channel=0))
-# track.append(Message('note_off', note=XX, velocity=64, time=XX,channel=0))
-#fw.close()
+
 mid.save('new.mid')
 
 
