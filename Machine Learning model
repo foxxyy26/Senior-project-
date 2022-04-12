@@ -4,3 +4,25 @@ from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D, LSTM
 from keras.utils import to_categorical
 from wandb.keras import WandbCallback
 import matplotlib.pyplot as plt
+
+X_train, X_test, y_train, y_test = get_train_test()
+
+channels = 1
+config.epochs = 50
+config.batch_size = 100
+
+num_classes = 3
+
+X_train = X_train.reshape(X_train.shape[0], config.buckets, config.max_len, channels)
+X_test = X_test.reshape(X_test.shape[0], config.buckets, config.max_len, channels)
+
+
+X_train = X_train.reshape(X_train.shape[0], config.buckets, config.max_len)
+X_test = X_test.reshape(X_test.shape[0], config.buckets, config.max_len)
+
+model = Sequential()
+model.add(Flatten(input_shape=(config.buckets, config.max_len)))
+model.add(Dense(num_classes, activation='softmax'))
+model.compile(loss="categorical_crossentropy",
+                  optimizer="adam",
+                  metrics=['accuracy'])
