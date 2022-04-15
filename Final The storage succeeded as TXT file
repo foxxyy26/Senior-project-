@@ -39,4 +39,5 @@ with open('data.txt', 'r') as file:
             time = [note.time for note in lines if word == 'time']
             tracks += [notes, channel, velocity, time]
         
-print(tracks)
+for x in range(len(tracks)):
+    print(tracks[x])
