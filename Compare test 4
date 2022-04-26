@@ -4,7 +4,6 @@ from mido import MidiFile, MidiTrack
 import xlwt
 import csv
 import xlrd
-import pandas as pd
 
 file1 = 'VampireKillerCV1.mid'
 file2 = 'VampireKillerCV2.mid'
