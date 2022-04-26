@@ -1,0 +1,100 @@
+import codecs
+import os
+from mido import MidiFile, MidiTrack
+import xlwt
+import csv
+import xlrd
+import pandas as pd
+import win32com.client as win32
+
+file1 = 'VampireKillerCV1.mid'
+file2 = 'VampireKillerCV2.mid'
+output_file = "compare.xls"
+
+if os.path.exists(output_file):
+    os.remove(output_file)
+track = MidiTrack()
+mid1 = MidiFile(file1)
+fw = open(file1.split(".")[0]+".txt", 'w')
+mid1_attrs = []
+for i, track in enumerate(mid1.tracks):
+
+    print('Track {}: {}'.format(i, track.name))
+    for msg in track:
+        print(msg)
+        msg_decode = ""
+        attrs1 = {}
+        for attr in msg.__dict__:
+            msg_decode += attr + ":" + str(msg.__dict__[attr]) + ", "
+            if attr in ["type","time",'note',"velocity","channel"]:
+                attrs1[attr] =msg.__dict__[attr]
+        if ("time" in attrs1) and ("note" in attrs1) and ("velocity" in attrs1):
+            mid1_attrs.append(attrs1)
+
+        msg_decode += '\n'
+        fw.write(msg_decode)
+fw.close()
+mid1.tracks.append(track)
+mid1.save('new1.mid')
+
+mid2 = MidiFile(file2)
+fw2 = open(file2.split(".")[0]+".txt", 'w')
+mid2_attrs = []
+for i, track in enumerate(mid2.tracks):
+    print('Track {}: {}'.format(i, track.name))
+    for msg in track:
+        print(msg)
+        msg_decode = ""
+        attrs2 = {}
+        for attr in msg.__dict__:
+            msg_decode += attr + ":" + str(msg.__dict__[attr]) + ", "
+            if attr in ["type","time",'note',"velocity","channel"]:
+                attrs2[attr] =msg.__dict__[attr]
+        if ("time" in attrs2) and ("note" in attrs2) and ("velocity" in attrs2):
+            mid2_attrs.append(attrs2)
+
+        msg_decode += '\n'
+        fw2.write(msg_decode)
+fw2.close()
+mid2.tracks.append(track)
+mid2.save('new2.mid')
+
+workbook = xlwt.Workbook(encoding='utf-8')
+sheet = workbook.add_sheet("sheet")
+
+
+
+
+sheet.write(0,0, file1.split(".")[0])
+sheet.write(0,5, file2.split(".")[0])
+for i,attr in enumerate(["type","time",'note',"velocity"]):
+    sheet.write(1, i, attr)
+    sheet.write(1, 5+i, attr)
+for i, attr in enumerate(["time", 'note', "velocity"]):
+    sheet.write(1, 10+i, attr)
+
+
+for i,value in enumerate(mid1_attrs):
+    for j, attr in enumerate(["type", "time", 'note', "velocity"]):
+        sheet.write(i+2, j, value[attr])
+for i,value in enumerate(mid2_attrs):
+    for j, attr in enumerate(["type", "time", 'note', "velocity"]):
+        sheet.write(i+2, j+5,value[attr])
+for i,value in enumerate(mid1_attrs):
+    for j, attr in enumerate([ "time", 'note', "velocity"]):
+        sheet.write(i+2, j+10, mid1_attrs[i][attr]-mid2_attrs[i][attr])
+
+workbook.save(output_file)
+
+
+def xls_to_csv():
+    workbook = xlrd.open_workbook('compare.xls')
+    table = workbook.sheet_by_index(0)
+    with codecs.open('compare.csv', 'w', encoding='utf-8') as f:
+        write = csv.writer(f)
+        for row_num in range(table.nrows):
+            row_value = table.row_values(row_num)
+            write.writerow(row_value)
+
+if __name__ == '__main__':
+    xls_to_csv()
