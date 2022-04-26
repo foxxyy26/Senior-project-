@@ -5,7 +5,6 @@ import xlwt
 import csv
 import xlrd
 import pandas as pd
-import win32com.client as win32
 
 file1 = 'VampireKillerCV1.mid'
 file2 = 'VampireKillerCV2.mid'
