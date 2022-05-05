@@ -1,0 +1,109 @@
+import sys
+import os
+from mido import MidiFile, MidiTrack
+import xlwt
+
+
+file1 = input("Please input the first input file:") # user enter file and check exist
+if not os.path.exists(file1.strip()):
+    print("ERROR: there is no file named %s"%file1.strip())
+    sys.exit(0)
+
+file2 = input("Please input the second input file:") # user enter file and check exist
+if not os.path.exists(file2.strip()):
+    print("ERROR: there is no file named %s"%file2.strip())
+    sys.exit(0)
+
+#Get a comparison
+output_file = "cpmpare2.xls"
+
+
+if os.path.exists(output_file):
+    os.remove(output_file) # Timely update output does not need to be deleted last time
+track = MidiTrack()
+
+#puts meta messages from midi file into txt file
+mid1 = MidiFile(file1)
+fw = open(file1.split(".")[0]+".txt", 'w') 
+mid1_attrs = []
+for i, track in enumerate(mid1.tracks):
+
+    print('Track {}: {}'.format(i, track.name))
+    for msg in track:
+        print(msg)
+        msg_decode = ""
+        attrs1 = {}
+        for attr in msg.__dict__:
+            msg_decode += attr + ":" + str(msg.__dict__[attr]) + ", "
+            if attr in ["type","time",'note',"velocity","channel"]:
+                attrs1[attr] =msg.__dict__[attr]
+        if ("time" in attrs1) and ("note" in attrs1) and ("velocity" in attrs1):
+            mid1_attrs.append(attrs1)
+
+        msg_decode += '\n'
+        fw.write(msg_decode)
+fw.close()
+mid1.tracks.append(track)
+
+# puts meta messages from midi file into txt file.
+mid2 = MidiFile(file2)
+fw2 = open(file2.split(".")[0]+".txt", 'w')
+mid2_attrs = []
+for i, track in enumerate(mid2.tracks):
+    print('Track {}: {}'.format(i, track.name))
+    for msg in track:
+        print(msg)
+        msg_decode = ""
+        attrs2 = {}
+        for attr in msg.__dict__:
+            msg_decode += attr + ":" + str(msg.__dict__[attr]) + ", "
+            if attr in ["type","time",'note',"velocity","channel"]:
+                attrs2[attr] =msg.__dict__[attr]
+        if ("time" in attrs2) and ("note" in attrs2) and ("velocity" in attrs2):
+            mid2_attrs.append(attrs2)
+
+        msg_decode += '\n'
+        fw2.write(msg_decode)
+fw2.close()
+mid2.tracks.append(track)
+
+
+workbook = xlwt.Workbook(encoding='utf-8')
+sheet2 = workbook.add_sheet("compare")  # Create a table
+sheet = workbook.add_sheet("sheet1")  # Create a table
+
+f = open("compare2.csv","w") # Create a csv file
+sheet.write(0,0, file1.split(".")[0])
+sheet.write(0,6, file2.split(".")[0])
+
+for i,attr in enumerate(["type","time",'note',"velocity","channel"]):
+    sheet.write(1, i, attr)
+    sheet.write(1, 6+i, attr)
+
+
+# Time was selected as the main eigenvalue
+s = ""
+for i,attr in enumerate(["time"]):
+    sheet2.write(0, i, attr)
+    s += "time" + ","
+f.write(s + "\n")
+
+# Four eigenvalue comparisons are listed in Excel file
+for i,value in enumerate(mid1_attrs):
+    for j, attr in enumerate(["type", "time", 'note', "velocity", "channel"]):
+        sheet.write(i+2, j, value[attr])
+for i,value in enumerate(mid2_attrs):
+    for j, attr in enumerate(["type", "time", 'note', "velocity", "channel"]):
+        sheet.write(i+2, j+6,value[attr])
+
+# Calculate difference
+for i,value in enumerate(mid1_attrs):
+    s = ""
+    for j, attr in enumerate([ "time"]):
+        sheet2.write(i+1, j, mid1_attrs[i][attr]-mid2_attrs[i][attr])
+        s+= str(mid1_attrs[i][attr]-mid2_attrs[i][attr])+","
+    f.write(s+"\n")
+f.close()
+
+# save file
+workbook.save(output_file)
